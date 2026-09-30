@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+
+# Personal study records and local workspace preferences
+ATTENDANCE.md
+.agents/
+.vscode/settings.json
+cbt-app/results/*.json

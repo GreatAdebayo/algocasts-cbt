@@ -1,0 +1,20 @@
+{
+  "name": "algocasts-cbt",
+  "version": "1.0.0",
+  "description": "A browser-based CBT and interview-practice app for Data Structures and Algorithms.",
+  "license": "GPL-3.0-only",
+  "private": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "npm run test:cbt && npm run test:completed",
+    "test:cbt": "node --check cbt-app/app.js && node --check cbt-app/questions.js && node --check cbt-app/question-validator.js && node --check cbt-app/app-utils.js && node --check cbt-app/server.js && node --test cbt-app/question-validator.test.js",
+    "test:completed": "jest --config jest.completed.config.cjs",
+    "test:exercises": "jest --config jest.config.cjs",
+    "cbt": "node cbt-app/server.js"
+  },
+  "devDependencies": {
+    "jest": "^30.5.2"
+  }
+}

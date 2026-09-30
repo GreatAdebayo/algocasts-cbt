@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlgoCasts CBT | Daily DSA Knowledge & Coding Exam</title>
+  <meta name="description" content="Interactive Computer-Based Testing (CBT) platform for practicing Data Structures & Algorithms challenges, tracking streaks, and running live browser-based unit tests.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Application Navigation -->
+  <header class="app-header" id="app-header">
+    <div class="brand-section">
+      <div class="brand-icon">⚡</div>
+      <div class="brand-text">
+        <h1>AlgoCasts CBT</h1>
+        <div class="brand-subtitle"><span>DSA Assessment Platform</span><span class="student-tag">Iyanu</span></div>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <div class="timer-box" id="exam-timer-box" title="Session Timer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        <span id="timer-display">25:00</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-primary" id="btn-test-control" title="Start the exam timer">▶ Start Test</button>
+      <button class="btn btn-secondary" id="btn-pause-test" title="Pause the exam timer" disabled>⏸ Pause</button>
+      <button class="btn btn-success" id="btn-submit-exam" title="Submit your test for automated grading">
+        <span>Submit & Grade</span>
+      </button>
+    </div>
+  </header>
+
+  <section class="test-settings" aria-label="Test settings">
+    <span class="test-settings-label">Test settings</span>
+      <div class="test-mode-toggle" role="group" aria-label="Test mode">
+        <button type="button" class="active" id="btn-practice-mode" aria-pressed="true">Practice</button>
+        <button type="button" id="btn-interview-mode" aria-pressed="false">Interview</button>
+      </div>
+      <label class="severity-selector" for="severity-select">
+        <span>Question set</span>
+        <select id="severity-select" class="app-select" aria-label="Choose question severity">
+          <option value="All">All levels</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+      </label>
+      <label class="exercise-selector" for="exercise-select">
+        <span>Exercise</span>
+        <select id="exercise-select" class="app-select" aria-label="Choose tutorial exercise">
+          <option value="All">All exercises</option>
+          <option value="String Reversal">Reverse String</option>
+          <option value="Palindrome">Palindrome</option>
+          <option value="Integer Reversal">Reverse Integer</option>
+          <option value="Max Character">Max Character</option>
+          <option value="FizzBuzz">FizzBuzz</option>
+        </select>
+      </label>
+      <label class="duration-selector" for="duration-input">
+        <span>Minutes</span>
+        <input id="duration-input" type="number" min="1" max="180" value="25" inputmode="numeric" aria-label="Exam duration in minutes">
+      </label>
+      <button class="btn btn-secondary" id="btn-open-history" title="View past exam attempts">
+        <span>📜 History</span>
+        <span class="badge" id="history-count-badge" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; padding: 2px 7px; border-radius: 9999px; font-size: 0.72rem;">0</span>
+      </button>
+  </section>
+
+  <!-- Question Navigation Palette Bar -->
+  <nav class="palette-strip" id="palette-strip" aria-label="Question Navigation">
+    <button class="palette-scroll-btn" id="btn-palette-prev" type="button" aria-label="Show earlier questions" title="Show earlier questions">‹</button>
+    <div class="palette-viewport" id="palette-viewport">
+      <div class="palette-items" id="palette-buttons-container">
+        <!-- Generated via JS: Q1, Q2, Q3... -->
+      </div>
+    </div>
+    <button class="palette-scroll-btn" id="btn-palette-next" type="button" aria-label="Show later questions" title="Show later questions">›</button>
+  </nav>
+
+  <section class="completion-panel" id="completion-panel" aria-live="polite" hidden>
+    <div class="completion-icon">✓</div>
+    <h2>Test complete</h2>
+    <p>Your answers and score have been saved. You can review the scorecard or begin a fresh attempt.</p>
+    <div class="completion-actions">
+      <button class="btn btn-secondary" id="btn-completion-review">Review Scorecard</button>
+      <button class="btn btn-primary" id="btn-completion-restart">↻ Start New Test</button>
+    </div>
+  </section>
+
+  <!-- Main Split Testing Workspace -->
+  <main class="workspace-container" id="main-workspace">
+    
+    <!-- Left Pane: Problem Description -->
+    <section class="question-pane" id="question-pane">
+      <div class="pane-header">
+        <div class="badge-group" id="question-badges">
+          <span class="badge badge-topic" id="badge-topic">String Reversal</span>
+          <span class="badge badge-difficulty" id="badge-difficulty">Easy</span>
+          <span class="badge badge-points" id="badge-points">15 Points</span>
+        </div>
+        <button class="btn btn-secondary btn-icon" id="btn-flag-question" title="Flag for review">
+          <span id="flag-icon">🚩</span>
+        </button>
+      </div>
+
+      <div class="pane-body" id="pane-body">
+        <h2 class="question-title" id="question-title">Loading Question...</h2>
+        <div class="question-prompt" id="question-prompt">
+          <!-- Rendered Question Prompt & Constraints -->
+        </div>
+
+        <div id="solution-explanation-container"></div>
+      </div>
+
+      <div class="pane-footer">
+        <div style="font-size: 0.8rem; color: var(--text-dim);" id="question-status-text">
+          Question 1 of 8
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary" id="btn-show-hint" style="font-size: 0.8rem;">💡 Hint</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Pane: Answer / Code Workspace -->
+    <section class="answer-pane" id="answer-pane">
+      
+      <!-- Code Editor Workspace (For Code Challenges) -->
+      <div class="editor-card" id="code-editor-card">
+        <div class="editor-toolbar">
+          <div class="editor-tabs">
+            <span class="editor-tab">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+              </svg>
+              solution.js
+            </span>
+            <span class="editor-syntax-badge" id="editor-syntax-badge" role="status" aria-live="polite"></span>
+          </div>
+          <details class="editor-operators" aria-label="Insert JavaScript operator">
+            <summary>⌨ Symbols</summary>
+            <div class="editor-symbol-grid">
+            <button type="button" data-insert="=">=</button>
+            <button type="button" data-insert="==">==</button>
+            <button type="button" data-insert="===">===</button>
+            <button type="button" data-insert="!=">!=</button>
+            <button type="button" data-insert="!==">!==</button>
+            <button type="button" data-insert="<">&lt;</button>
+            <button type="button" data-insert="<=">&lt;=</button>
+            <button type="button" data-insert=">">&gt;</button>
+            <button type="button" data-insert=">=">&gt;=</button>
+            <button type="button" data-insert="&&">&amp;&amp;</button>
+            <button type="button" data-insert="||">||</button>
+            <button type="button" data-insert="!">!</button>
+            <button type="button" data-insert="+">+</button>
+            <button type="button" data-insert="-">−</button>
+            <button type="button" data-insert="*">*</button>
+            <button type="button" data-insert="/">/</button>
+            <button type="button" data-insert="%">%</button>
+            <button type="button" data-insert="=>">=&gt;</button>
+            <button type="button" data-insert="()">()</button>
+            <button type="button" data-insert="{}">{}</button>
+            <button type="button" data-insert="[]">[]</button>
+            <button type="button" data-insert=";">;</button>
+            <button type="button" data-insert=",">,</button>
+            <button type="button" data-insert=".">.</button>
+            </div>
+          </details>
+        </div>
+
+        <div class="editor-workspace">
+          <div class="line-numbers" id="editor-line-numbers">1<br>2<br>3<br>4<br>5</div>
+          <textarea 
+            id="code-input" 
+            class="code-textarea" 
+            spellcheck="false" 
+            autocomplete="off" 
+            autocorrect="off" 
+            autocapitalize="off"
+            inputmode="text"
+            wrap="off"
+            placeholder="// Write your solution here..."></textarea>
+        </div>
+      </div>
+
+      <!-- Multiple Choice Options Workspace (For Conceptual Questions) -->
+      <div class="editor-card choices-card" id="conceptual-choices-card" style="display: none;">
+        <h3 style="font-size: 1rem; color: #cbd5e1; margin-bottom: 0.5rem;">Select your answer:</h3>
+        <div id="choices-container" style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <!-- Live Test Output Console Drawer -->
+      <div class="console-card" id="console-card">
+        <div class="console-header">
+          <div class="console-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+              <line x1="7" y1="2" x2="7" y2="22"></line>
+              <line x1="17" y1="2" x2="17" y2="22"></line>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <line x1="2" y1="7" x2="7" y2="7"></line>
+              <line x1="2" y1="17" x2="7" y2="17"></line>
+              <line x1="17" y1="17" x2="22" y2="17"></line>
+              <line x1="17" y1="7" x2="22" y2="7"></line>
+            </svg>
+            <span>Automated Test Output</span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-secondary btn-icon" id="btn-reset-code" title="Reset starter code" style="font-size: 0.75rem; padding: 4px 8px;">
+              Reset
+            </button>
+            <button class="btn btn-primary" id="btn-run-tests" style="font-size: 0.8rem; padding: 6px 14px;">
+              ▶ Run Tests
+            </button>
+          </div>
+        </div>
+        <div class="console-body" id="test-output-body">
+          <div style="color: var(--text-dim); text-align: center; padding: 1.5rem 0;">
+            Click <strong>Run Tests</strong> or press <strong>Ctrl + Enter</strong> to execute your code against test cases.
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Bottom Global Navigation Bar -->
+  <footer class="footer-bar" id="footer-bar">
+    <button class="btn btn-secondary" id="btn-prev-question">
+      ← Previous
+    </button>
+    <div style="font-size: 0.85rem; color: var(--text-muted);" id="footer-summary-text">
+      Total Score: <strong id="footer-current-score" style="color: #38bdf8;">0 / 120 pts</strong>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <button class="btn btn-secondary" id="btn-save-progress">
+        💾 Save Answer
+      </button>
+      <button class="btn btn-primary" id="btn-next-question">
+        Next Question →
+      </button>
+    </div>
+  </footer>
+
+  <div class="app-toast" id="app-toast" role="status" aria-live="polite"></div>
+
+  <!-- Assessment Results / Scorecard Modal -->
+  <div class="modal-backdrop" id="results-modal">
+    <div class="score-modal">
+      <div class="modal-header">
+        <h2 style="font-size: 1.5rem; color: #ffffff;">Test Evaluation & Scorecard</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Performance report for Days 1–4 DSA Concepts</p>
+        
+        <div class="score-hero">
+          <div class="score-circle" id="score-circle" style="--score-pct: 0;">
+            <div class="score-circle-inner">
+              <span class="pct" id="modal-pct-display">0%</span>
+              <span class="pts" id="modal-pts-display">0/120</span>
+            </div>
+          </div>
+
+          <div class="score-stats">
+            <div class="stat-item">
+              <div class="stat-label">Performance Grade</div>
+              <div class="stat-val" id="modal-grade-display" style="color: #34d399;">Mastery</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Time Taken</div>
+              <div class="stat-val" id="modal-time-display">12:45</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Questions Passed</div>
+              <div class="stat-val" id="modal-passed-display">0 / 8</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Daily Streak</div>
+              <div class="stat-val" id="modal-streak-display">🔥 4 Days</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-content-scroll">
+        <div class="breakdown-title">Detailed Question Breakdown</div>
+        <div class="question-review-list" id="modal-review-list">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <div class="modal-footer" style="display: flex; justify-content: space-between;">
+        <button class="btn btn-secondary" id="btn-export-current-results" title="Export this graded attempt as markdown study notes">
+          📥 Export Study Notes (.md)
+        </button>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-secondary" id="btn-modal-close">Close & Review</button>
+          <button type="button" class="btn btn-success" id="btn-modal-finish">✓ Finish Test</button>
+          <button class="btn btn-primary" id="btn-retake-test">Retake Test</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Past Attempts History Modal -->
+  <div class="modal-backdrop" id="history-modal">
+    <div class="score-modal" style="max-width: 920px;">
+      <div class="modal-header" style="text-align: left; display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <h2 style="font-size: 1.4rem; color: #ffffff;">📜 Past Exam Attempts & Solutions</h2>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Review your historical test scores, inspect your submitted answers, and study official solutions anytime.</p>
+        </div>
+        <button class="btn btn-secondary btn-icon" id="btn-close-history" title="Close modal" style="padding: 6px 12px; font-size: 1rem;">✕</button>
+      </div>
+
+      <div class="modal-content-scroll" id="history-content-scroll" style="max-height: 65vh;">
+        <div id="history-attempts-list" class="history-attempts-list">
+          <!-- Rendered via JS -->
+        </div>
+        <div id="history-inspect-view" style="display: none;">
+          <!-- Rendered when inspecting a specific attempt -->
+        </div>
+      </div>
+
+      <div class="modal-footer" style="display: flex; justify-content: space-between;">
+        <div>
+          <button class="btn btn-secondary" id="btn-history-back" style="display: none;">← Back to Attempts List</button>
+          <button type="button" class="btn btn-danger" id="btn-clear-history" style="font-size: 0.8rem;">🗑 Clear History</button>
+        </div>
+        <button class="btn btn-secondary" id="btn-history-close-bottom">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic Scripts -->
+  <script src="questions.js?v=20260930-2"></script>
+  <script src="question-validator.js?v=20260930-2"></script>
+  <script src="app-utils.js?v=20260930-2"></script>
+  <script src="app.js?v=20260930-2"></script>
+</body>
+</html>
